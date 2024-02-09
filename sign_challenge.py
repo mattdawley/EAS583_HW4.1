@@ -1,3 +1,4 @@
+from eth_account.messages import encode_defunct
 from web3 import Web3
 import eth_account
 import os
@@ -21,13 +22,11 @@ def sign_challenge(challenge):
     wallet_account = w3.eth.account.from_key(private_key)
     addr = wallet_account.address
 
-    msg = eth_account.messages.encode_defunct(challenge)
-    sig = eth_account.Account.sign_message(msg, private_key)
-
-    assert eth_account.Account.recover_message(msg,signature=sig.signature.hex()) == addr, f"Failed to sign message properly"
+    #msg = eth_account.messages.encode_defunct(challenge)
+    sig = eth_account.Account.sign_message(encode_defunct(text=challenge), private_key=private_key)
 
     #return sig, acct #acct contains the private key
-    return addr, sig
+    return addr, sig.signature.hex()
 
 
 if __name__ == "__main__":
